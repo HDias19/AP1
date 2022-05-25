@@ -27,7 +27,7 @@ def validate_response (client_sock, response):
 
 
 # process QUIT operation
-def quit_action (client_sock, attempts):
+def quit_action (client_sock):
 	return None
 
 
@@ -48,6 +48,7 @@ def quit_action (client_sock, attempts):
 # Suporte da execução do cliente
 #
 def run_client (client_sock, client_id):
+	# Ler 
 	return None
 	
 

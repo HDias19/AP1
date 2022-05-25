@@ -117,7 +117,7 @@ def number_client (client_sock, request):
 #
 # Suporte do pedido de terminação de um cliente - operação STOP
 #
-def stop_client (client_sock, request):
+def stop_client (client_sock):
 	return None
 # obtain the client_id from his socket
 # verify the appropriate conditions for executing this operation
