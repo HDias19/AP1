@@ -126,9 +126,25 @@ def stop_client (client_sock, request):
 
 def main():
 	# validate the number of arguments and eventually print error message and exit with error
-	# verify type of of arguments and eventually print error message and exit with error
+	if len(sys.argv) < 2:
+		print("Número inválido de argumentos!")
+		print("O server.py está a espera de 2 argumentos!")
+		print("Utilização: python3 server.py (número do porto a que se quer ligar)")
+		sys.exit(1)
+	elif len(sys.argv) > 2:
+		print("Número inválido de argumentos!")
+		print("O server.py está a espera de 2 argumentos!")
+		print("Utilização: python3 server.py (porto a que se quer ligar)")
+		exit(1)
 	
-	port = ?
+	# verify type of of arguments and eventually print error message and exit with error
+	if sys.argv[1].isdigit():
+		port = (int)(sys.argv[1])
+	else:
+		print("Utilização inválida!")
+		print("Porto nos argumentos deve ser um número!")
+		print("Utilização: python3 server.py (número do porto a que se quer ligar)")
+		sys.exit(1)
 
 	server_socket = socket.socket (socket.AF_INET, socket.SOCK_STREAM)
 	server_socket.bind (("127.0.0.1", port))

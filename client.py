@@ -53,10 +53,29 @@ def run_client (client_sock, client_id):
 
 def main():
 	# validate the number of arguments and eventually print error message and exit with error
+	if len(sys.argv) < 3:
+		print("Número inválido de argumentos!")
+		print("O client.py está a espera de 3 ou 4 argumentos!")
+		print("Utilização: python3 client.py (client_id) (número do porto a que se quer ligar) [(maquina)(não utilizar caso o servidor esteja na mesma máquina)]")
+		sys.exit(1)
+	elif len(sys.argv) > 4:
+		print("Número inválido de argumentos!")
+		print("O client.py está a espera de 3 ou 4 argumentos!")
+		print("Utilização: python3 client.py (client_id) (número do porto a que se quer ligar) [(maquina)(não utilizar caso o servidor esteja na mesma máquina)]")
+		sys.exit(1)
+	
 	# verify type of of arguments and eventually print error message and exit with error
-
-	port = ?
-	hostname = ?
+	if len(sys.argv) == 3 and sys.argv[2].isdigit():
+		hostname = "127.0.0.1"
+		port = (int)(sys.argv[2])
+	elif len(sys.argv) == 4 and sys.argv[2].isdigit() and sys.argv[3].isascii():
+		hostname = sys.argv[3]
+		port = sys.argv[2]
+	else:
+		print("Utilização inválida!")
+		print("Porto nos argumentos deve ser um número!")
+		print("Utilização: python3 client.py (client_id) (número do porto a que se quer ligar) [(maquina)(não utilizar caso o servidor esteja na mesma máquina)]")
+		sys.exit(1)
 
 	client_sock = socket.socket (socket.AF_INET, socket.SOCK_STREAM)
 	client_sock.connect ((hostname, port))
