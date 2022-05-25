@@ -90,8 +90,10 @@ def quit_client (client_sock, request):
 # Suporte da criação de um ficheiro csv com o respectivo cabeçalho
 #
 def create_file ():
-	return None
 # create report csv file with header
+	fout = open("report.csv","w")
+	header_writer = csv.DictWriter(fout, fieldnames=["client_id", "numbers_received", "results"])
+	header_writer.writeheader()
 
 
 #
