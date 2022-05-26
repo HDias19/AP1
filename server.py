@@ -48,9 +48,10 @@ def decrypt_intvalue (client_id, data):
 # Suporte de descodificação da operação pretendida pelo cliente
 #
 def new_msg (client_sock):
-	return None
 # read the client request
+	message = recv_dict(client_sock)
 # detect the operation requested by the client
+	op = message["op"]
 # execute the operation and obtain the response (consider also operations not available)
 # send the response to the client
 

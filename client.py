@@ -5,6 +5,7 @@ import sys
 import socket
 import json
 import base64
+from urllib import response
 from common_comm import send_dict, recv_dict, sendrecv_dict
 
 from Crypto.Cipher import AES
@@ -48,8 +49,13 @@ def quit_action (client_sock):
 # Suporte da execução do cliente
 #
 def run_client (client_sock, client_id):
-	# Ler 
-	return None
+	# Send START
+	start_message = { "op": "START", "client_id": client_id }
+	send_dict(client_sock, start_message)
+
+	# START Response
+	response = recv_dict(client_sock)
+	validate_response(client_sock, response)
 	
 
 def main():
