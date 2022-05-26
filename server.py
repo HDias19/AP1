@@ -57,6 +57,12 @@ def new_msg (client_sock):
 # execute the operation and obtain the response (consider also operations not available)
 	if op == "START":
 		response = new_client(client_sock, message)
+	elif op == "NUMBER":
+		response = number_client(client_sock, message)
+	elif op == "STOP":
+		response = stop_client(client_sock)
+	elif op == "QUIT":
+		response = quit_client(client_sock, message)
 # send the response to the client
 	send_dict(client_sock, response)
 
@@ -93,12 +99,19 @@ def clean_client (client_sock):
 # Suporte do pedido de desistência de um cliente - operação QUIT
 #
 def quit_client (client_sock, request):
-	return None
 # obtain the client_id from his socket
+	client_id = find_client_id(client_sock)
 # verify the appropriate conditions for executing this operation
+	if client_id == request["client_id"]:
 # process the report file with the QUIT result
+		update_file(client_sock, request)
 # eliminate client from dictionary
+		clean_client(client_sock)
+		response = {"op": "QUIT", "status": True}
+	else:
+		response = {"op": "QUIT", "status": False, "error": "Cliente inexixtente"}
 # return response message with or without error message
+	return response
 
 
 #
