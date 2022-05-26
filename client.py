@@ -53,9 +53,7 @@ def run_client (client_sock, client_id):
 	start_message = { "op": "START", "client_id": client_id }
 	response = sendrecv_dict(client_sock, start_message)
 
-	print(response) ##REMOVER
-	while(True):
-		validate_response(client_sock, response)
+	validate_response(client_sock, response)
 	
 
 def main():
