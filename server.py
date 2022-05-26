@@ -16,8 +16,10 @@ users = {}
 
 # return the client_id of a socket or None
 def find_client_id (client_sock):
+	for key, value in users.items():
+		if value["socket"].getsockname() == client_sock.getsockname():
+			return key
 	return None
-
 
 # Função para encriptar valores a enviar em formato json com codificação base64
 # return int data encrypted in a 16 bytes binary string and coded base64
@@ -53,18 +55,30 @@ def new_msg (client_sock):
 # detect the operation requested by the client
 	op = message["op"]
 # execute the operation and obtain the response (consider also operations not available)
+	if op == "START":
+		response = new_client(client_sock, message)
 # send the response to the client
+	send_dict(client_sock, response)
 
 
 #
 # Suporte da criação de um novo jogador - operação START
 #
 def new_client (client_sock, request):
-	return None
 # detect the client in the request
+	client_id = find_client_id(client_sock)
 # verify the appropriate conditions for executing this operation
+	if client_id == None:
+		client_info = { "socket": client_sock, "cipher": None, "numbers": []}
+		client = {request["client_id"]: client_info}
 # process the client in the dictionary
+		users.update(client)
+		message = {"op": "START", "status": True}
 # return response message with or without error message
+	else:
+		message = {"op": "START", "status": False, "error": "Cliente existente"}
+	return message
+
 
 
 #

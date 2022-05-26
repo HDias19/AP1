@@ -49,13 +49,13 @@ def quit_action (client_sock):
 # Suporte da execução do cliente
 #
 def run_client (client_sock, client_id):
-	# Send START
+	# Send START and wait response
 	start_message = { "op": "START", "client_id": client_id }
-	send_dict(client_sock, start_message)
+	response = sendrecv_dict(client_sock, start_message)
 
-	# START Response
-	response = recv_dict(client_sock)
-	validate_response(client_sock, response)
+	print(response) ##REMOVER
+	while(True):
+		validate_response(client_sock, response)
 	
 
 def main():
