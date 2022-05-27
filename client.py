@@ -35,7 +35,7 @@ def validate_response (client_sock, response):
 
 # process QUIT operation
 def quit_action (client_sock):
-	return None
+	print("Terminou a conexao com o servidor!")
 
 
 # Outcomming message structure:
@@ -93,6 +93,7 @@ def run_client (client_sock, client_id):
 			return None
 		elif flag == "QUIT":
 			quit_action(client_sock)
+			break
 
 		# send message to server
 		response = sendrecv_dict(client_sock, message)

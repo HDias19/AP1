@@ -91,9 +91,11 @@ def new_client (client_sock, request):
 # Suporte da eliminação de um cliente
 #
 def clean_client (client_sock):
-	return None
 # obtain the client_id from his socket and delete from the dictionary
-
+	client_id = find_client_id(client_sock)
+	print(users)
+	users.pop(client_id)
+	print(users)
 
 #
 # Suporte do pedido de desistência de um cliente - operação QUIT
@@ -102,11 +104,10 @@ def quit_client (client_sock, request):
 # obtain the client_id from his socket
 	client_id = find_client_id(client_sock)
 # verify the appropriate conditions for executing this operation
-	if client_id == request["client_id"]:
+	if client_id != None:
 # process the report file with the QUIT result
 		update_file(client_sock, request)
 # eliminate client from dictionary
-		clean_client(client_sock)
 		response = {"op": "QUIT", "status": True}
 	else:
 		response = {"op": "QUIT", "status": False, "error": "Cliente inexixtente"}
@@ -136,11 +137,14 @@ def update_file (client_id, result):
 # Suporte do processamento do número de um cliente - operação NUMBER
 #
 def number_client (client_sock, request):
-	return None
+#	return None
 # obtain the client_id from his socket
+	client_id = find_client_id(client_sock)
 # verify the appropriate conditions for executing this operation
-# return response message with or without error message
-
+	if client_id == request["client_id"]:
+		return None
+	# return response message with or without error message
+		
 
 #
 # Suporte do pedido de terminação de um cliente - operação STOP
