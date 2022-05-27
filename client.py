@@ -24,6 +24,7 @@ def decrypt_intvalue (cipherkey, data):
 
 # verify if response from server is valid or is an error message and act accordingly
 def validate_response (client_sock, response):
+	
 	return None
 
 
@@ -53,8 +54,14 @@ def run_client (client_sock, client_id):
 	start_message = { "op": "START", "client_id": client_id }
 	response = sendrecv_dict(client_sock, start_message)
 
-	validate_response(client_sock, response)
-	
+	# flag is a variable that holds what operation the client has to do next
+	flag = validate_response(client_sock, response)
+
+	if flag == "START":
+		# Something went wrong with the START operation, inform client and close client.py
+		print("O Cliente já existe no servidor, aceda com um identificador de cliente diferente.")
+		sys.exit(1)
+    			
 
 def main():
 	# validate the number of arguments and eventually print error message and exit with error
