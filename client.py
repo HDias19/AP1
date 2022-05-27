@@ -24,9 +24,14 @@ def decrypt_intvalue (cipherkey, data):
 
 # verify if response from server is valid or is an error message and act accordingly
 def validate_response (client_sock, response):
-	
-	return None
-
+	if response["op"] == "START" and response["status"]:
+		return "NUMBER"
+	elif response["op"] == "START" and not(response["status"]):
+		return "START"
+	elif response["op"] == "NUMBER" and response["status"]:
+		return "NUMBER"
+	elif response["op"] == "QUIT" and response["status"]:
+		return "QUIT"
 
 # process QUIT operation
 def quit_action (client_sock):
@@ -71,17 +76,26 @@ def run_client (client_sock, client_id):
 
 		if flag == "START":
 			# Something went wrong with the START operation, inform client and close client.py
-			print("O Cliente já existe no servidor, aceda com um identificador de cliente diferente.")
+			print("ERRO: " + response["error"])
 			sys.exit(1)
 		elif flag == "NUMBER":
-			return None
+    		# Input do utilizador
+			number = input("Introduza o número inteiro a enviar: ('q' para forçar o encerramento e 's' para parar o envio de novos números): ")
+			if number == "q":	
+				message = { "op": "QUIT" }
+			elif number == "s":
+				message = { "op": "STOP" }
+			elif not(number.isnumeric()):
+				return None
+			else:
+				message = { "op": "NUMBER", "number": number }
 		elif flag == "STOP":
 			return None
 		elif flag == "QUIT":
 			quit_action(client_sock)
 
 		# send message to server
-		sendrecv_dict(client_sock, message)
+		response = sendrecv_dict(client_sock, message)
     			
 
 def main():
