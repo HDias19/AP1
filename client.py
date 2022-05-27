@@ -50,17 +50,38 @@ def quit_action (client_sock):
 # Suporte da execução do cliente
 #
 def run_client (client_sock, client_id):
+	# Check if user wants encryption
+	user_input = ""
+	while(user_input != "s" and user_input != "n"):
+		user_input = input("Pretente utilizar encriptação nas mensagens com o servidor? (s/n): ")
+	
 	# Send START and wait response
-	start_message = { "op": "START", "client_id": client_id }
+	if user_input == "s":
+		start_message = { "op": "START", "client_id": client_id, "cipher": None }	#COMPLETAR COM O CIPHER
+	elif user_input == "n":
+		start_message = { "op": "START", "client_id": client_id, "cipher": None }
+	
 	response = sendrecv_dict(client_sock, start_message)
 
-	# flag is a variable that holds what operation the client has to do next
-	flag = validate_response(client_sock, response)
+	# loop to interact with the server
+	loop = True
+	while(loop):
+		# flag is a variable that holds what operation the client has to do next
+		flag = validate_response(client_sock, response)
 
-	if flag == "START":
-		# Something went wrong with the START operation, inform client and close client.py
-		print("O Cliente já existe no servidor, aceda com um identificador de cliente diferente.")
-		sys.exit(1)
+		if flag == "START":
+			# Something went wrong with the START operation, inform client and close client.py
+			print("O Cliente já existe no servidor, aceda com um identificador de cliente diferente.")
+			sys.exit(1)
+		elif flag == "NUMBER":
+			return None
+		elif flag == "STOP":
+			return None
+		elif flag == "QUIT":
+			quit_action(client_sock)
+
+		# send message to server
+		sendrecv_dict(client_sock, message)
     			
 
 def main():
