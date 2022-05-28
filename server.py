@@ -7,6 +7,7 @@ import json
 import base64
 import csv
 import random
+from urllib import request, response
 from common_comm import send_dict, recv_dict, sendrecv_dict
 
 from Crypto.Cipher import AES
@@ -137,23 +138,28 @@ def update_file (client_id, result):
 # Suporte do processamento do número de um cliente - operação NUMBER
 #
 def number_client (client_sock, request):
-#	return None
 # obtain the client_id from his socket
 	client_id = find_client_id(client_sock)
 # verify the appropriate conditions for executing this operation
-	if client_id == request["client_id"]:
-		return None
+	if client_id != None:
 	# return response message with or without error message
-		
+	#verificaçao?
+		response = { "op": "NUMBER", "status": True }
+	else:
+		response = { "op": "NUMBER", "status": False, "error": "Cliente inexistente" }
+	return response
 
 #
 # Suporte do pedido de terminação de um cliente - operação STOP
 #
 def stop_client (client_sock):
-	return None
+	#return None
 # obtain the client_id from his socket
+	client_id = find_client_id(client_sock)
 # verify the appropriate conditions for executing this operation
+	if client_id != None:
 # process the report file with the result
+		update_file()
 # eliminate client from dictionary
 # return response message with result or error message
 
