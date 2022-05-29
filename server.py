@@ -144,9 +144,9 @@ def number_client (client_sock, request):
 	if client_id != None:
 	# return response message with or without error message
 	#verificaçao?
-		usersAux = users.get[client_id]
-		usersAux["numbers"].append(request["number"])
-		users.update(usersAux)
+		auxDict = users[client_id]
+		auxDict["numbers"].append((int)(request["number"]))
+		users.update({client_id: auxDict})
 		response = { "op": "NUMBER", "status": True }
 	else:
 		response = { "op": "NUMBER", "status": False, "error": "Cliente inexistente" }
