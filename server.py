@@ -145,7 +145,7 @@ def number_client (client_sock, request):
 	# return response message with or without error message
 	#verificaçao?
 		usersAux = users.get[client_id]
-		usersAux["numbers"].append(request)
+		usersAux["numbers"].append(request["number"])
 		users.update(usersAux)
 		response = { "op": "NUMBER", "status": True }
 	else:
