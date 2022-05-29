@@ -144,6 +144,9 @@ def number_client (client_sock, request):
 	if client_id != None:
 	# return response message with or without error message
 	#verificaçao?
+		usersAux = users.get[client_id]
+		usersAux["numbers"].append(request)
+		users.update(usersAux)
 		response = { "op": "NUMBER", "status": True }
 	else:
 		response = { "op": "NUMBER", "status": False, "error": "Cliente inexistente" }
@@ -159,8 +162,10 @@ def stop_client (client_sock):
 # verify the appropriate conditions for executing this operation
 	if client_id != None:
 # process the report file with the result
-		update_file()
+		#update_file(client_sock, qualquer coisa)
 # eliminate client from dictionary
+		clean_client(client_sock)
+		#response = { "op": "STOP", "status": True, "min": número mínimo, "max": número máximo }
 # return response message with result or error message
 
 
