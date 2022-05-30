@@ -160,10 +160,10 @@ def stop_client (client_sock):
 # verify the appropriate conditions for executing this operation
 	if client_id != None:
 # process the report file with the result
-		update_file(client_sock, qualquer coisa)
+		update_file(client_sock, find_results(client_id))
 # eliminate client from dictionary
 		clean_client(client_sock)
-		#response = { "op": "STOP", "status": True, "min": número mínimo, "max": número máximo }
+		#response = { "op": "STOP", "status": True, "numbers": "min": número mínimo, "max": número máximo }
 # return response message with result or error message
 
 #
