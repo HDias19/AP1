@@ -5,7 +5,6 @@ import sys
 import socket
 import json
 import base64
-from urllib import response
 from common_comm import send_dict, recv_dict, sendrecv_dict
 
 from Crypto.Cipher import AES
@@ -30,6 +29,8 @@ def validate_response (client_sock, response):
 		return "START"
 	elif response["op"] == "NUMBER" and response["status"]:
 		return "NUMBER"
+	elif response["op"] == "STOP" and response["status"]:
+		return "STOP"
 	elif response["op"] == "QUIT" and response["status"]:
 		return "QUIT"
 
@@ -96,7 +97,6 @@ def run_client (client_sock, client_id):
 			while check_number_input(number):
 				print("Valor inválido!")
 				number = input("Introduza o número inteiro a enviar: ('q' para forçar o encerramento e 's' para parar o envio de novos números): ")
-			
 			# Operaçao pretendida pelo utilizador
 			if number == "q":	
 				message = { "op": "QUIT" }
@@ -105,11 +105,11 @@ def run_client (client_sock, client_id):
 			else:
 				message = { "op": "NUMBER", "number": (int)(number) }
 		elif flag == "STOP":
-			##print dos numeros
+			# Print dos resultados
+			print("Total de números: " + str(response["numbers"]) + ", Mínimo: " + str(response["min"]) + ", Máximo: " + str(response["max"]))
 			quit_action(client_sock)
 		elif flag == "QUIT":
 			quit_action(client_sock)
-			break
 
 		# send message to server
 		response = sendrecv_dict(client_sock, message)

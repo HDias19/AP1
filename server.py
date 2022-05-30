@@ -7,7 +7,6 @@ import json
 import base64
 import csv
 import random
-from urllib import request, response
 from common_comm import send_dict, recv_dict, sendrecv_dict
 
 from Crypto.Cipher import AES
@@ -121,16 +120,20 @@ def quit_client (client_sock, request):
 def create_file ():
 # create report csv file with header
 	fout = open("report.csv","w")
-	header_writer = csv.DictWriter(fout, fieldnames=["client_id", "numbers_received", "results"], delimiter="|")
+	header_writer = csv.DictWriter(fout, fieldnames=["client_id", "numbers_received", "min", "max"], delimiter="|")
 	header_writer.writeheader()
+	fout.close()
 	
 
 #
 # Suporte da actualização de um ficheiro csv com a informação do cliente e resultado
 #
-def update_file (client_id, result):
-	fout = open("report.csv", "w")
+def update_file (client_id, results):
 # update report csv file with the result from the client
+	fout = open("report.csv", "w")
+	writer = csv.DictWriter(fout, fieldnames=["client_id", "numbers_received", "min", "max"], delimiter="|")
+	writer.writerow({"client_id": client_id, "numbers_received": results[0], "min": results[1], "max": results[2]})
+	fout.close()
 
 
 #
@@ -142,7 +145,6 @@ def number_client (client_sock, request):
 # verify the appropriate conditions for executing this operation
 	if client_id != None:
 	# return response message with or without error message
-	#verificaçao?
 		auxDict = users[client_id]
 		auxDict["numbers"].append(request["number"])
 		users.update({client_id: auxDict})
@@ -160,18 +162,23 @@ def stop_client (client_sock):
 # verify the appropriate conditions for executing this operation
 	if client_id != None:
 # process the report file with the result
-		update_file(client_sock, find_results(client_id))
+		results = find_results(client_id)
+		update_file(client_sock, results)
 # eliminate client from dictionary
-		clean_client(client_sock)
-		#response = { "op": "STOP", "status": True, "numbers": "min": número mínimo, "max": número máximo }
+		# clean_client(client_sock)
 # return response message with result or error message
+		response = { "op": "STOP", "status": True, "numbers": results[0], "min": results[1], "max": results[2] }
+	else:
+		response = { "op": "STOP", "status": False, "error": "Cliente inexistente" }
+	return response
+
 
 #
 #Procurar número máximo introduzido pelo cliente
 #
-def find_max(request):
+def find_max(client_id):
 	max = None
-	for num in request["numbers"]:
+	for num in users[client_id].get("numbers"):
 		if(max is None or num > max):
 			max = num
 	return max
@@ -179,9 +186,9 @@ def find_max(request):
 #
 #Procurar número mínimo introduzido pelo cliente
 #
-def find_min(request):
+def find_min(client_id):
 	min = None
-	for num in request["numbers"]:
+	for num in users[client_id].get("numbers"):
 		if(min is None or num < min):
 			min = num
 	return min
@@ -190,12 +197,12 @@ def find_min(request):
 #
 #Criar dicionário com número de valores, valor mínimo e valor máximo
 #
-def find_results(request):
-	size = len(request["numbers"])
-	min = find_min(request)
-	max = find_max(request)
-	dic = [size, min, max]
-	return dic
+def find_results(client_id):
+	size = len(users[client_id].get("numbers"))
+	min = find_min(client_id)
+	max = find_max(client_id)
+	arr = [size, min, max]
+	return arr
 
 
 def main():
