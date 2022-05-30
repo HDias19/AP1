@@ -80,13 +80,16 @@ def run_client (client_sock, client_id):
 			sys.exit(1)
 		elif flag == "NUMBER":
     		# Input do utilizador
+			## INCOMPLETO ## (validar a entrada do user)
 			number = input("Introduza o número inteiro a enviar: ('q' para forçar o encerramento e 's' para parar o envio de novos números): ")
+			while (not(int(number)) or not(number == "s") or not(number == "q")):
+				print("Valor inválido!")
+				number = input("Introduza o número inteiro a enviar: ('q' para forçar o encerramento e 's' para parar o envio de novos números): ")
+			# Operaçao pretendida pelo utilizador
 			if number == "q":	
 				message = { "op": "QUIT" }
 			elif number == "s":
 				message = { "op": "STOP" }
-			elif not(number.isnumeric()):
-				return None
 			else:
 				message = { "op": "NUMBER", "number": number }
 		elif flag == "STOP":
@@ -123,7 +126,7 @@ def main():
 		print("Utilização inválida!")
 		print("Porto nos argumentos deve ser um número!")
 		print("Utilização: python3 client.py (client_id) (número do porto a que se quer ligar) [(maquina)(não utilizar caso o servidor esteja na mesma máquina)]")
-		sys.exit(1)
+		sys.exit(2)
 
 	client_sock = socket.socket (socket.AF_INET, socket.SOCK_STREAM)
 	client_sock.connect ((hostname, port))

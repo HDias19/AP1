@@ -94,9 +94,7 @@ def new_client (client_sock, request):
 def clean_client (client_sock):
 # obtain the client_id from his socket and delete from the dictionary
 	client_id = find_client_id(client_sock)
-	print(users)
 	users.pop(client_id)
-	print(users)
 
 #
 # Suporte do pedido de desistência de um cliente - operação QUIT
@@ -145,7 +143,7 @@ def number_client (client_sock, request):
 	# return response message with or without error message
 	#verificaçao?
 		auxDict = users[client_id]
-		auxDict["numbers"].append((int)(request["number"]))
+		auxDict["numbers"].append(request["number"])
 		users.update({client_id: auxDict})
 		response = { "op": "NUMBER", "status": True }
 	else:
