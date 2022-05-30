@@ -105,7 +105,8 @@ def quit_client (client_sock, request):
 # verify the appropriate conditions for executing this operation
 	if client_id != None:
 # process the report file with the QUIT result
-		update_file(client_sock, request)
+		result = find_results(client_sock)
+		update_file(client_sock, result)
 # eliminate client from dictionary
 		response = {"op": "QUIT", "status": True}
 	else:
@@ -120,15 +121,15 @@ def quit_client (client_sock, request):
 def create_file ():
 # create report csv file with header
 	fout = open("report.csv","w")
-	header_writer = csv.DictWriter(fout, fieldnames=["client_id", "numbers_received", "results"])
+	header_writer = csv.DictWriter(fout, fieldnames=["client_id", "numbers_received", "results"], delimiter="|")
 	header_writer.writeheader()
-
+	
 
 #
 # Suporte da actualização de um ficheiro csv com a informação do cliente e resultado
 #
 def update_file (client_id, result):
-	return None
+	fout = open("report.csv", "w")
 # update report csv file with the result from the client
 
 
@@ -154,13 +155,12 @@ def number_client (client_sock, request):
 # Suporte do pedido de terminação de um cliente - operação STOP
 #
 def stop_client (client_sock):
-	#return None
 # obtain the client_id from his socket
 	client_id = find_client_id(client_sock)
 # verify the appropriate conditions for executing this operation
 	if client_id != None:
 # process the report file with the result
-		#update_file(client_sock, qualquer coisa)
+		update_file(client_sock, qualquer coisa)
 # eliminate client from dictionary
 		clean_client(client_sock)
 		#response = { "op": "STOP", "status": True, "min": número mínimo, "max": número máximo }

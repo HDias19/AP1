@@ -36,6 +36,8 @@ def validate_response (client_sock, response):
 # process QUIT operation
 def quit_action (client_sock):
 	print("Terminou a conexao com o servidor!")
+	client_sock.close()
+	sys.exit(4)
 
 
 # Outcomming message structure:
@@ -103,7 +105,8 @@ def run_client (client_sock, client_id):
 			else:
 				message = { "op": "NUMBER", "number": (int)(number) }
 		elif flag == "STOP":
-			return None
+			##print dos numeros
+			quit_action(client_sock)
 		elif flag == "QUIT":
 			quit_action(client_sock)
 			break
