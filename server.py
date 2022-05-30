@@ -130,9 +130,9 @@ def create_file ():
 #
 def update_file (client_id, results):
 # update report csv file with the result from the client
-	fout = open("report.csv", "w")
+	fout = open("report.csv", "a")
 	writer = csv.DictWriter(fout, fieldnames=["client_id", "numbers_received", "min", "max"], delimiter="|")
-	writer.writerow({"client_id": client_id, "numbers_received": results[0], "min": results[1], "max": results[2]})
+	writer.writerow({"client_id": find_client_id(client_id), "numbers_received": results[0], "min": results[1], "max": results[2]})
 	fout.close()
 
 

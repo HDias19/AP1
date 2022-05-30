@@ -1,1 +1,4 @@
-<socket.socket fd=4, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 1234), raddr=('127.0.0.1', 49880)>|9|1|9
+client_id|numbers_received|min|max
+henrique|9|1|9
+pedro|8|12|90
+henrique|8|9|98
