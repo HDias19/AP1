@@ -187,7 +187,7 @@ def main():
 		print("Utilização inválida!")
 		print("Porto nos argumentos deve ser um número!")
 		print("Utilização: python3 server.py (número do porto a que se quer ligar)")
-		sys.exit(1)
+		sys.exit(2)
 
 	server_socket = socket.socket (socket.AF_INET, socket.SOCK_STREAM)
 	server_socket.bind (("127.0.0.1", port))

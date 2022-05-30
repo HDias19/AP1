@@ -51,6 +51,16 @@ def quit_action (client_sock):
 # { op = "STOP", status, min, max }
 
 
+def check_number_input(number):
+	if number.isnumeric():
+		return False
+	else:
+		if number == "q" or number == "s":
+			return False
+		else:
+			return True
+
+
 #
 # Suporte da execução do cliente
 #
@@ -80,18 +90,18 @@ def run_client (client_sock, client_id):
 			sys.exit(1)
 		elif flag == "NUMBER":
     		# Input do utilizador
-			## INCOMPLETO ## (validar a entrada do user)
 			number = input("Introduza o número inteiro a enviar: ('q' para forçar o encerramento e 's' para parar o envio de novos números): ")
-			while (not(int(number)) or not(number == "s") or not(number == "q")):
+			while check_number_input(number):
 				print("Valor inválido!")
 				number = input("Introduza o número inteiro a enviar: ('q' para forçar o encerramento e 's' para parar o envio de novos números): ")
+			
 			# Operaçao pretendida pelo utilizador
 			if number == "q":	
 				message = { "op": "QUIT" }
 			elif number == "s":
 				message = { "op": "STOP" }
 			else:
-				message = { "op": "NUMBER", "number": number }
+				message = { "op": "NUMBER", "number": (int)(number) }
 		elif flag == "STOP":
 			return None
 		elif flag == "QUIT":
@@ -131,6 +141,7 @@ def main():
 	client_sock = socket.socket (socket.AF_INET, socket.SOCK_STREAM)
 	client_sock.connect ((hostname, port))
 
+	##TRY CATCH
 	run_client (client_sock, sys.argv[1])
 
 	client_sock.close ()
