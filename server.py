@@ -198,10 +198,10 @@ def find_min(client_id):
 #Criar dicionário com número de valores, valor mínimo e valor máximo
 #
 def find_results(client_id):
-	size = len(users[client_id].get("numbers"))
+	results = users[client_id].get("numbers")
 	min = find_min(client_id)
 	max = find_max(client_id)
-	arr = [size, min, max]
+	arr = [results, min, max]
 	return arr
 
 

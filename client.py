@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import re
 import sys
 import socket
 import json
@@ -26,13 +27,25 @@ def validate_response (client_sock, response):
 	if response["op"] == "START" and response["status"]:
 		return "NUMBER"
 	elif response["op"] == "START" and not(response["status"]):
-		return "START"
+		# Something went wrong with the START operation, inform client and close client.py
+		print("ERRO: " + response["error"])
+		sys.exit(3)
 	elif response["op"] == "NUMBER" and response["status"]:
 		return "NUMBER"
+	elif response["op"] == "NUMBER" and not(response["status"]):
+		print("ERRO: " + response["error"])
+		sys.exit(3)
 	elif response["op"] == "STOP" and response["status"]:
 		return "STOP"
+	elif response["op"] == "STOP" and not(response["status"]):
+		print("ERRO: " + response["error"])
+		sys.exit(3)
 	elif response["op"] == "QUIT" and response["status"]:
 		return "QUIT"
+	elif response["op"] == "QUIT" and not(response["status"]):
+		print("ERRO: " + response["error"])
+		sys.exit(3)
+
 
 # process QUIT operation
 def quit_action (client_sock):
@@ -55,7 +68,7 @@ def quit_action (client_sock):
 
 
 def check_number_input(number):
-	if number.isnumeric():
+	if re.match("[-+]?\d+$", number):
 		return False
 	else:
 		if number == "q" or number == "s":
@@ -86,12 +99,8 @@ def run_client (client_sock, client_id):
 	while(loop):
 		# flag is a variable that holds what operation the client has to do next
 		flag = validate_response(client_sock, response)
-
-		if flag == "START":
-			# Something went wrong with the START operation, inform client and close client.py
-			print("ERRO: " + response["error"])
-			sys.exit(1)
-		elif flag == "NUMBER":
+	
+		if flag == "NUMBER":
     		# Input do utilizador
 			number = input("Introduza o número inteiro a enviar: ('q' para forçar o encerramento e 's' para parar o envio de novos números): ")
 			while check_number_input(number):
@@ -117,16 +126,12 @@ def run_client (client_sock, client_id):
 
 def main():
 	# validate the number of arguments and eventually print error message and exit with error
-	if len(sys.argv) < 3:
+	if len(sys.argv) < 3 or len(sys.argv) > 4:
 		print("Número inválido de argumentos!")
 		print("O client.py está a espera de 3 ou 4 argumentos!")
 		print("Utilização: python3 client.py (client_id) (número do porto a que se quer ligar) [(maquina)(não utilizar caso o servidor esteja na mesma máquina)]")
 		sys.exit(1)
-	elif len(sys.argv) > 4:
-		print("Número inválido de argumentos!")
-		print("O client.py está a espera de 3 ou 4 argumentos!")
-		print("Utilização: python3 client.py (client_id) (número do porto a que se quer ligar) [(maquina)(não utilizar caso o servidor esteja na mesma máquina)]")
-		sys.exit(1)
+	
 	
 	# verify type of of arguments and eventually print error message and exit with error
 	if len(sys.argv) == 3 and sys.argv[2].isdigit():
