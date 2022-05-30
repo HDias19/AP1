@@ -166,6 +166,37 @@ def stop_client (client_sock):
 		#response = { "op": "STOP", "status": True, "min": número mínimo, "max": número máximo }
 # return response message with result or error message
 
+#
+#Procurar número máximo introduzido pelo cliente
+#
+def find_max(request):
+	max = None
+	for num in request["numbers"]:
+		if(max is None or num > max):
+			max = num
+	return max
+
+#
+#Procurar número mínimo introduzido pelo cliente
+#
+def find_min(request):
+	min = None
+	for num in request["numbers"]:
+		if(min is None or num < min):
+			min = num
+	return min
+
+
+#
+#Criar dicionário com número de valores, valor mínimo e valor máximo
+#
+def find_results(request):
+	size = len(request["numbers"])
+	min = find_min(request)
+	max = find_max(request)
+	dic = [size, min, max]
+	return dic
+
 
 def main():
 	# validate the number of arguments and eventually print error message and exit with error
