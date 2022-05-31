@@ -9,7 +9,7 @@ import csv
 import random
 from common_comm import send_dict, recv_dict, sendrecv_dict
 
-from Crypto.Cipher import AES
+#from Crypto.Cipher import AES
 
 # Dicionário com a informação relativa aos clientes
 users = {}
@@ -220,7 +220,12 @@ def main():
 	
 	# verify type of of arguments and eventually print error message and exit with error
 	if sys.argv[1].isdigit():
-		port = (int)(sys.argv[1])
+		if (int)(sys.argv[1]) >= 0 and (int)(sys.argv[1]) <= 65535:
+			port = (int)(sys.argv[1])
+		else:
+			print("Utilização inválida!")
+			print("Número do porto deve estar compreendido entre 0 e 65535!")
+			sys.exit(2)
 	else:
 		print("Utilização inválida!")
 		print("Porto nos argumentos deve ser um número!")
