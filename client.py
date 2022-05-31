@@ -8,7 +8,7 @@ import json
 import base64
 from common_comm import send_dict, recv_dict, sendrecv_dict
 
-#from Crypto.Cipher import AES
+from Crypto.Cipher import AES
 
 # Função para encriptar valores a enviar em formato jsos com codificação base64
 # return int data encrypted in a 16 bytes binary string coded in base64

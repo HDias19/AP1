@@ -9,7 +9,7 @@ import csv
 import random
 from common_comm import send_dict, recv_dict, sendrecv_dict
 
-#from Crypto.Cipher import AES
+from Crypto.Cipher import AES
 
 # Dicionário com a informação relativa aos clientes
 users = {}
