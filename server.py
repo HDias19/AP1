@@ -24,14 +24,19 @@ def find_client_id (client_sock):
 # Função para encriptar valores a enviar em formato json com codificação base64
 # return int data encrypted in a 16 bytes binary string and coded base64
 def encrypt_intvalue (client_id, data):
-	return None
+	cipher = AES.new(users[client_id].get("cipher"), AES.MODE_ECB)
+	tosend = cipher.encrypt(bytes("%16d" % (data), "utf-8"))
+	return str(base64.b64encode(tosend), "utf-8")
 
 
 # Função para desencriptar valores recebidos em formato json com codificação base64
 # return int data decrypted from a 16 bytes binary string and coded base64
 def decrypt_intvalue (client_id, data):
-	return None
-
+	cipherkey = base64.b64decode(users[client_id].get("cipher"))
+	cipher = AES.new(cipherkey, AES.MODE_ECB)
+	data = base64.b64decode(data)
+	data = cipher.decrypt(data)
+	return int(str(data, "utf-8"))
 
 # Incomming message structure:
 # { op = "START", client_id, [cipher] }
@@ -75,7 +80,11 @@ def new_client (client_sock, request):
 	client_id = find_client_id(client_sock)
 # verify the appropriate conditions for executing this operation
 	if client_id == None:
-		client_info = { "socket": client_sock, "cipher": None, "numbers": []}
+		if request["cipher"] != None:
+			client_info = { "socket": client_sock, "cipher": request["cipher"], "numbers": []}
+		else:
+			client_info = { "socket": client_sock, "cipher": None, "numbers": []}
+		
 		client = {request["client_id"]: client_info}
 # process the client in the dictionary
 		users.update(client)
@@ -104,8 +113,8 @@ def quit_client (client_sock, request):
 # verify the appropriate conditions for executing this operation
 	if client_id != None:
 # process the report file with the QUIT result
-		result = find_results(client_sock)
-		update_file(client_sock, result)
+		#result = find_results(client_sock)
+		#update_file(client_sock, result)
 # eliminate client from dictionary
 		response = {"op": "QUIT", "status": True}
 	else:
@@ -132,7 +141,7 @@ def update_file (client_id, results):
 # update report csv file with the result from the client
 	fout = open("report.csv", "a")
 	writer = csv.DictWriter(fout, fieldnames=["client_id", "numbers_received", "min", "max"], delimiter="|")
-	writer.writerow({"client_id": find_client_id(client_id), "numbers_received": results[0], "min": results[1], "max": results[2]})
+	writer.writerow({"client_id": find_client_id(client_id), "numbers_received": results[2], "min": results[0], "max": results[1]})
 	fout.close()
 
 
@@ -146,7 +155,10 @@ def number_client (client_sock, request):
 	if client_id != None:
 	# return response message with or without error message
 		auxDict = users[client_id]
-		auxDict["numbers"].append(request["number"])
+		if users[client_id].get("cipher") != None:
+			auxDict["numbers"].append(decrypt_intvalue(client_id, request["number"]))
+		else:
+			auxDict["numbers"].append(request["number"])
 		users.update({client_id: auxDict})
 		response = { "op": "NUMBER", "status": True }
 	else:
@@ -167,7 +179,11 @@ def stop_client (client_sock):
 # eliminate client from dictionary
 		# clean_client(client_sock)
 # return response message with result or error message
-		response = { "op": "STOP", "status": True, "numbers": results[0], "min": results[1], "max": results[2] }
+		if users[client_id].get("cipher") != None:
+			response = { "op": "STOP", "status": True, "min": encrypt_intvalue(client_id, results[0]), "max": encrypt_intvalue(client_id, results[1]) }
+		else:
+			response = { "op": "STOP", "status": True, "min": results[0], "max": results[1] }
+
 	else:
 		response = { "op": "STOP", "status": False, "error": "Cliente inexistente" }
 	return response
@@ -201,7 +217,7 @@ def find_results(client_id):
 	results = users[client_id].get("numbers")
 	min = find_min(client_id)
 	max = find_max(client_id)
-	arr = [results, min, max]
+	arr = [min, max, results]
 	return arr
 
 
@@ -219,7 +235,7 @@ def main():
 		exit(1)
 	
 	# verify type of of arguments and eventually print error message and exit with error
-	if sys.argv[1].isdigit():
+	if sys.argv[1].isdigit() and sys.argv[1] < 65537:
 		port = (int)(sys.argv[1])
 	else:
 		print("Utilização inválida!")
