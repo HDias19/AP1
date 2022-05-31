@@ -21,9 +21,12 @@ def encrypt_intvalue (cipherkey, data):
 # Função para desencriptar valores recebidos em formato json com codificação base64
 # return int data decrypted from a 16 bytes binary strings coded in base64
 def decrypt_intvalue (cipherkey, data):
+	print(data)
 	cipher = AES.new(cipherkey, AES.MODE_ECB)
 	data = base64.b64decode(data)
+	print(data)
 	data = cipher.decrypt(data)
+	print(data)
 	return int(str(data, "utf-8"))	
 
 
@@ -134,7 +137,7 @@ def run_client (client_sock, client_id):
 		elif flag == "STOP":
 			# Print dos resultados
 			if cifra:
-				print("Total de números: " + str(numbers) + ", Mínimo: " + str(decrypt_intvalue(cipherkey, response["min"])) + ", Máximo: " + str(decrypt_intvalue(cipherkey, response["max"])))
+				print("Total de números: " + str(numbers) + ", Mínimo: " + decrypt_intvalue(cipherkey, response["min"]) + ", Máximo: " + decrypt_intvalue(cipherkey, response["max"]))
 			else:
 				print("Total de números: " + str(numbers) + ", Mínimo: " + str(response["min"]) + ", Máximo: " + str(response["max"]))
 			quit_action(client_sock)
