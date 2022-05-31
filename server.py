@@ -32,8 +32,7 @@ def encrypt_intvalue (client_id, data):
 # Função para desencriptar valores recebidos em formato json com codificação base64
 # return int data decrypted from a 16 bytes binary string and coded base64
 def decrypt_intvalue (client_id, data):
-	cipherkey = base64.b64decode(users[client_id].get("cipher"))
-	cipher = AES.new(cipherkey, AES.MODE_ECB)
+	cipher = AES.new(users[client_id].get("cipher"), AES.MODE_ECB)
 	data = base64.b64decode(data)
 	data = cipher.decrypt(data)
 	return int(str(data, "utf-8"))
@@ -81,7 +80,7 @@ def new_client (client_sock, request):
 # verify the appropriate conditions for executing this operation
 	if client_id == None:
 		if request["cipher"] != None:
-			client_info = { "socket": client_sock, "cipher": request["cipher"], "numbers": []}
+			client_info = { "socket": client_sock, "cipher": base64.b64decode(request["cipher"]), "numbers": []}
 		else:
 			client_info = { "socket": client_sock, "cipher": None, "numbers": []}
 		

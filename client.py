@@ -21,13 +21,11 @@ def encrypt_intvalue (cipherkey, data):
 # Função para desencriptar valores recebidos em formato json com codificação base64
 # return int data decrypted from a 16 bytes binary strings coded in base64
 def decrypt_intvalue (cipherkey, data):
-	print(data)
 	cipher = AES.new(cipherkey, AES.MODE_ECB)
 	data = base64.b64decode(data)
-	print(data)
 	data = cipher.decrypt(data)
-	print(data)
-	return int(str(data, "utf-8"))	
+	return int(str(data, "utf-8"))
+		
 
 
 # verify if response from server is valid or is an error message and act accordingly
@@ -102,7 +100,6 @@ def run_client (client_sock, client_id):
 		# Criação da cifra de encriptação
 		cipherkey = os.urandom(16)
 		cipherkey_tosend = str(base64.b64encode(cipherkey), "utf-8")
-		print(cipherkey_tosend)
 		start_message = { "op": "START", "client_id": client_id, "cipher": cipherkey_tosend }	#COMPLETAR COM O CIPHER
 	elif user_input == "n":
 		cifra = False
@@ -137,7 +134,7 @@ def run_client (client_sock, client_id):
 		elif flag == "STOP":
 			# Print dos resultados
 			if cifra:
-				print("Total de números: " + str(numbers) + ", Mínimo: " + decrypt_intvalue(cipherkey, response["min"]) + ", Máximo: " + decrypt_intvalue(cipherkey, response["max"]))
+				print("Total de números: " + str(numbers) + ", Mínimo: " + str(decrypt_intvalue(cipherkey, response["min"])) + ", Máximo: " + str(decrypt_intvalue(cipherkey, response["max"])))
 			else:
 				print("Total de números: " + str(numbers) + ", Mínimo: " + str(response["min"]) + ", Máximo: " + str(response["max"]))
 			quit_action(client_sock)
@@ -183,7 +180,6 @@ def main():
 	client_sock = socket.socket (socket.AF_INET, socket.SOCK_STREAM)
 	client_sock.connect ((hostname, port))
 
-	##TRY CATCH
 	run_client (client_sock, sys.argv[1])
 
 	client_sock.close ()
