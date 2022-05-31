@@ -8,7 +8,7 @@ import json
 import base64
 from common_comm import send_dict, recv_dict, sendrecv_dict
 
-from Crypto.Cipher import AES
+#from Crypto.Cipher import AES
 
 # Função para encriptar valores a enviar em formato jsos com codificação base64
 # return int data encrypted in a 16 bytes binary string coded in base64
@@ -155,12 +155,22 @@ def main():
 	
 	
 	# verify type of of arguments and eventually print error message and exit with error
-	if len(sys.argv) == 3 and sys.argv[2].isdigit() and (int)(sys.argv[2]) < 65537:
-		hostname = "127.0.0.1"
-		port = (int)(sys.argv[2])
-	elif len(sys.argv) == 4 and sys.argv[2].isdigit() and (int)(sys.argv[2]) < 65537 and sys.argv[3].isascii():
-		hostname = sys.argv[3]
-		port = sys.argv[2]
+	if len(sys.argv) == 3 and sys.argv[2].isdigit():
+		if (int)(sys.argv[2]) >= 0 and (int)(sys.argv[2]) <= 65535:
+			hostname = "127.0.0.1"
+			port = (int)(sys.argv[2])
+		else:
+			print("Utilização inválida!")
+			print("Número do porto deve estar compreendido entre 0 e 65535!")
+			sys.exit(2)
+	elif len(sys.argv) == 4 and sys.argv[2].isdigit() and sys.argv[3].isascii():
+		if (int)(sys.argv[2]) >= 0 and (int)(sys.argv[2]) <= 65535:
+			hostname = sys.argv[3]
+			port = sys.argv[2]
+		else:
+			print("Utilização inválida!")
+			print("Número do porto deve estar compreendido entre 0 e 65535!")
+			sys.exit(2)
 	else:
 		print("Utilização inválida!")
 		print("Porto nos argumentos deve ser um número!")

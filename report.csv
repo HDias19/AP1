@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 client_id|numbers_received|min|max
 henrique|[1, 2, 3, 4, 5]|1|5
 henrique|[12, 3, 4, 5]|3|12
 henrique|[1, 2, 3, 4, 5]|1|5
+=======
+client_id|numbers_received|min|max
+>>>>>>> dbc112b6f9a8cf1a90161694fcb3674b92328840
